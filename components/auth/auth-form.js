@@ -14,7 +14,7 @@ function AuthForm() {
     const response = await fetch("/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(email, password),
+      body: JSON.stringify({email, password}),
     });
 
     const data = await response.json();
@@ -26,7 +26,7 @@ function AuthForm() {
     return data;
   };
 
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
     if (isLogin) {
       return;
@@ -34,8 +34,11 @@ function AuthForm() {
 
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    
-    createUser(email, password);
+    try {
+      return await createUser(email, password);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <section className={classes.auth}>
